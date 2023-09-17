@@ -153,6 +153,7 @@ async function displayMovieDetails() {
   `;
 
   document.querySelector('#movie-details').appendChild(div);
+  displayCast();
 }
 
 async function displayShowDetails() {
@@ -243,6 +244,34 @@ function displayBackgroundImage(type, backgroundPath) {
   } else {
     document.querySelector('#show-details').appendChild(overlayDiv);
   }
+}
+
+async function displayCast() {
+  ID = window.location.search.split('=')[1];
+  const credit = await fetchAPIData(`movie/${ID}/credits`);
+  const castArray = credit.cast;
+  console.log(castArray);
+
+  const container = document.createElement('div');
+  castArray.forEach((item) => {
+    const castCard = document.createElement('div');
+
+    const img = document.createElement('img');
+    img.src = `https://image.tmdb.org/t/p/w92${item.profile_path}`;
+    castCard.appendChild(img);
+
+    const name = document.createElement('p');
+    name.textContent = item.name;
+    castCard.appendChild(name);
+
+    const character = document.createElement('p');
+    character.textContent = item.character;
+    castCard.appendChild(character);
+
+    container.appendChild(castCard);
+  });
+
+  document.querySelector('#movie-details').appendChild(container);
 }
 
 // Search Movies/Shows
